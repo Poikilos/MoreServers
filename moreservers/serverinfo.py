@@ -18,6 +18,8 @@ class ServerInfo:
     def __init__(self):
         self.name = None
         self.ready = False
+        self.launch_button = None
+        self.plugin_button = None
 
     def load(self, server_dir):
         """
@@ -34,7 +36,8 @@ class ServerInfo:
             error = ("Expected one jar in %s, got %s"
                      % (server_dir, self.launch_jars))
             self.ready = False
-        self.ready = True
+        else:
+            self.ready = True
         return self.ready
 
     def refresh_plugins(self, opener=None):
@@ -55,6 +58,23 @@ class ServerInfo:
                 plugin.load(plugin_jar)
                 self.plugins.append(plugin)
         self.opener = opener
+
+
+    def plugin_path(self, path):
+        new_plugin = PluginInfo()
+        new_plugin.load(path)
+        if not new_plugin.name:
+            raise ValueError("Expected path got %s" % repr(new_plugin.name))
+        for plugin in self.plugins:
+            if new_plugin.name.lower() == plugin.name.lower():
+                print('Found "%s"' % new_plugin.name)
+                return plugin.path
+        return None
+
+    def has_plugin(self, path):
+        if not path:
+            raise ValueError("Expected path got %s" % repr(path))
+        return self.plugin_path(path) is not None
 
     def install_plugin(self, path):
         """

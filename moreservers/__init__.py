@@ -14,6 +14,54 @@ else:
             return sub_path
         return None
 
+import sys
+
+if sys.version_info.major >= 3:
+    # Python 3: Use subprocess.run directly
+    from subprocess import run as subprocess_run
+else:
+    # Python 2: Define a compatible subprocess_run function
+    import subprocess
+
+    def subprocess_run(args, check=False, stdout=None, stderr=None, cwd=None):
+        """
+        Simulate subprocess.run() for Python 2 using subprocess.Popen.
+
+        Args:
+            args (list): The command and arguments to run.
+            check (bool): If True, raise CalledProcessError if the command exits with a non-zero status.
+            stdout (file-like object, optional): Capture standard output if specified.
+            stderr (file-like object, optional): Capture standard error if specified.
+            cwd (str, optional): Working directory to run the command.
+
+        Returns:
+            CompletedProcess: A simulated result object containing return code, stdout, and stderr.
+        """
+        # Use subprocess.Popen to execute the command and capture the output
+        process = subprocess.Popen(
+            args,
+            stdout=stdout or subprocess.PIPE,
+            stderr=stderr or subprocess.PIPE,
+            cwd=cwd
+        )
+        # Wait for the process to complete and capture stdout and stderr
+        out, err = process.communicate()
+        retcode = process.returncode
+
+        # Simulate the CompletedProcess object
+        class CompletedProcess:
+            def __init__(self, returncode, stdout, stderr):
+                self.returncode = returncode
+                self.stdout = stdout
+                self.stderr = stderr
+
+        result = CompletedProcess(retcode, out, err)
+
+        if check and retcode != 0:
+            raise subprocess.CalledProcessError(retcode, args, output=out, stderr=err)
+
+        return result
+
 
 def get_jars(parent, opener=None):
     """
