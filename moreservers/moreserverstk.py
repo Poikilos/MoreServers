@@ -191,7 +191,7 @@ def main():
     screen_h = root.winfo_screenheight()
 
     # Calculate desired window size (15% width, 30% height of the screen)
-    window_w = int(screen_w * 0.15)
+    window_w = int(screen_w * 0.5)
     window_h = int(screen_h * 0.3)
 
     # Set window size and position to the center
