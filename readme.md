@@ -33,7 +33,7 @@ Install your plugin and launch multiple server versions quickly.
 3. **Run the GUI**:
     After installation, you can launch the GUI with:
     ```bash
-    moreservers-launch
+    moreservers-gui
     ```
 
 ## Usage
@@ -69,5 +69,4 @@ We welcome contributions! If you'd like to contribute, please feel free to submi
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
 ## Contact
-
-For any questions or support, please contact `your.email@example.com`.
+- See [Issues](https://github.com/Poikilos/MoreServers/issues)

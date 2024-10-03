@@ -11,7 +11,7 @@ setup(
     include_package_data=True,
     entry_points={
         'gui_scripts': [
-            'moreservers-launch=moreservers.moreserverstk:main',
+            'moreservers-gui=moreservers.moreserverstk:main',
         ],
     },
     install_requires=[
