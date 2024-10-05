@@ -3,6 +3,8 @@ Install your plugin and launch multiple server versions quickly.
 
 **MoreServers** is a user-friendly plugin manager GUI designed to manage Java `.jar` plugins for multiple servers. It automatically detects all server directories within a specified location and allows you to install plugins into any server with a single click.
 
+![screenshot](screenshot.png)
+
 ## Features
 
 - **Automatic Server Detection**: Scans your servers directory and lists all detected server instances.
