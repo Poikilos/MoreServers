@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
 REPO_DIR = os.path.dirname(MODULE_DIR)
@@ -9,6 +10,7 @@ if __name__ == "__main__":
 
 from moreservers import (
     get_jars,
+    subprocess_run,
 )
 
 from moreservers.plugininfo import PluginInfo
@@ -17,6 +19,13 @@ from moreservers.plugininfo import PluginInfo
 class ServerInfo:
     def __init__(self):
         self.name = None
+        self.path = None
+        self.launch_jars = None
+        self.plugins_path = None
+        self.plugins = None
+        self.opener = None
+        self.pid = None
+
         self.ready = False
         self.launch_button = None
         self.plugin_button = None
@@ -39,6 +48,36 @@ class ServerInfo:
         else:
             self.ready = True
         return self.ready
+
+    def run_jar_with(self, gui_term_path, gui_term_args):
+        """Start the server and store its process ID."""
+        self.command_parts = [gui_term_path] + gui_term_args + [self.launch_jars[0]]
+        self.run_custom(self, self.command_parts)
+    
+    def run_custom(self, command_parts, callback=None):
+        self.command_parts = command_parts
+        # process = subprocess_run(  # CompletedProcess has no PID
+        process = subprocess.Popen(
+            command_parts,
+            cwd=self.path
+        )
+        self.pid = process.pid  # Store the process ID when the server starts
+        # if callback:
+        #     process.wait()  # works with Popen
+        #     callback()
+        # ^ not working (callback is too soon)
+
+    def is_running(self):
+        """Check if the server process is still running."""
+        if self.pid is None:
+            return False
+        try:
+            # Signal 0 is a no-op; it checks if the process is running
+            os.kill(self.pid, 0)
+        except OSError:
+            self.pid = None
+            return False
+        return True
 
     def refresh_plugins(self, opener=None):
         """
